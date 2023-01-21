@@ -199,11 +199,11 @@ function AudioVisualizer(props) {
     }, [analyser, source, audioCtx]);
 
     useEffect(() => {
-        if (audioCtx) {
+        if (audioCtx && audioElement) {
             setAnalyser(audioCtx.createAnalyser());
             setSource(audioCtx.createMediaElementSource(audioElement));
         }
-    }, [audioCtx]);
+    }, [audioCtx, audioElement]);
 
     useEffect(() => {
         if (audioElement) {
@@ -223,7 +223,6 @@ function AudioVisualizer(props) {
             audioElement.addEventListener("ended", () => {
                 setPlay(false);
             });
-            console.log("!");
             setAudioCtx(new (window.AudioContext || window.webkitAudioContext)());
         }
     }, [audioElement]);
@@ -249,7 +248,8 @@ function AudioVisualizer(props) {
     }
 
     function togglePlay(given) {
-        if (audioElement) {
+        if (audioElement && audioCtx) {
+            audioCtx.resume();
             if ((given === true) || audioElement.paused) {
                 audioElement.play();
                 setPlay(true);
