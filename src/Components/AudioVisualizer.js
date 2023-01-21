@@ -3,6 +3,9 @@ import VisibilitySensor from 'react-visibility-sensor';
 
 function AudioVisualizer(props) {
     const [audioElement, setAudioElement] = useState(null);
+    const [analyser, setAnalyser] = useState(null);
+    const [audioCtx, setAudioCtx] = useState(null);
+    const [source, setSource] = useState(null);
     const [loaded, setLoaded] = useState(false);
     const canvasAreaRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -14,31 +17,13 @@ function AudioVisualizer(props) {
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-        if (audioElement) { 
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const source = audioCtx.createMediaElementSource(audioElement);
-            const analyser = audioCtx.createAnalyser();
+        if (analyser && source && audioCtx) {
             source.connect(analyser);
             analyser.connect(audioCtx.destination);
+            togglePlay(true);
+
             const bufferLength = analyser.frequencyBinCount;
             let dataArray = new Uint8Array(bufferLength);
-            function updateScrubBar() {
-                if(audioElement && scrubBarRef.current) {
-                    let currentTime = audioElement.currentTime;
-                    let duration = audioElement.duration;
-                    let scrubBarValue = (currentTime/duration) * 100;
-                    scrubBarRef.current.value = scrubBarValue;
-                }
-            }
-
-            audioElement.addEventListener("timeupdate", updateScrubBar);
-            audioElement.src = (fileInputRef.current && fileInputRef.current.files[0])? URL.createObjectURL(fileInputRef.current.files[0]): process.env.PUBLIC_URL + '/music/song.mp3';
-            audioElement.addEventListener("loadeddata", () => {
-                setLoaded(true);
-            });
-            audioElement.addEventListener("ended", () => {
-                setPlay(false);
-            });
 
             frequencyRef.current.willReadFrequently = true;
             backgroundRef.current.willReadFrequently = true;
@@ -210,7 +195,36 @@ function AudioVisualizer(props) {
             }
 
             drawVisualization();
-            togglePlay(true);
+        }
+    }, [analyser, source, audioCtx]);
+
+    useEffect(() => {
+        if (audioCtx) {
+            setAnalyser(audioCtx.createAnalyser());
+            setSource(audioCtx.createMediaElementSource(audioElement));
+        }
+    }, [audioCtx]);
+
+    useEffect(() => {
+        if (audioElement) {
+            function updateScrubBar() {
+                if(audioElement && scrubBarRef.current) {
+                    let currentTime = audioElement.currentTime;
+                    let duration = audioElement.duration;
+                    let scrubBarValue = (currentTime/duration) * 100;
+                    scrubBarRef.current.value = scrubBarValue;
+                }
+            }
+            audioElement.addEventListener("timeupdate", updateScrubBar);
+            audioElement.src = (fileInputRef.current && fileInputRef.current.files[0])? URL.createObjectURL(fileInputRef.current.files[0]): process.env.PUBLIC_URL + '/music/song.mp3';
+            audioElement.addEventListener("loadeddata", () => {
+                setLoaded(true);
+            });
+            audioElement.addEventListener("ended", () => {
+                setPlay(false);
+            });
+            const audioCtx = 
+            setAudioCtx(new (window.AudioContext || window.webkitAudioContext)());
         }
     }, [audioElement]);
 
@@ -220,6 +234,9 @@ function AudioVisualizer(props) {
             audioElement.pause();
             audioElement.currentTime = 0;
         }
+        setAnalyser(null);
+        setSource(null);
+        setAudioCtx(null);
         setAudioElement(new Audio());
     }
 
