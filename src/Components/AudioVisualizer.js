@@ -14,7 +14,7 @@ function AudioVisualizer(props) {
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-        if (audioElement) {
+        if (audioElement) { 
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const source = audioCtx.createMediaElementSource(audioElement);
             const analyser = audioCtx.createAnalyser();
@@ -22,7 +22,6 @@ function AudioVisualizer(props) {
             analyser.connect(audioCtx.destination);
             const bufferLength = analyser.frequencyBinCount;
             let dataArray = new Uint8Array(bufferLength);
-
             function updateScrubBar() {
                 if(audioElement && scrubBarRef.current) {
                     let currentTime = audioElement.currentTime;
@@ -65,6 +64,7 @@ function AudioVisualizer(props) {
             let rotationAngle = 0;
             let rotateSmudge = false;
             let smudgeVelocity = 0;
+
             // Draw the frequency spectrum visualization
             function drawVisualization() {
                 requestAnimationFrame(drawVisualization);
@@ -210,6 +210,7 @@ function AudioVisualizer(props) {
             }
 
             drawVisualization();
+            togglePlay(true);
         }
     }, [audioElement]);
 
@@ -230,20 +231,18 @@ function AudioVisualizer(props) {
         }
     }
 
-    function togglePlay() {
+    function togglePlay(given) {
         if (audioElement) {
-            if (audioElement.paused) {
+            if ((given === true) || audioElement.paused) {
                 audioElement.play();
                 setPlay(true);
             } else {
                 audioElement.pause();
                 setPlay(false);
             }
+        } else {
+            loadAudio();
         }
-    }
-
-    if (!audioElement) {
-        loadAudio();
     }
 
     return (
@@ -254,7 +253,6 @@ function AudioVisualizer(props) {
                 <div className="main-header-container">
                     <h2 className={"main-header"} style={play?{opacity: 0, transition: "2s opacity"}:{opacity: 0.8, transition: "3s opacity"}}>David Mash</h2>
                 </div>
-                {loaded?
                 <div className="control-panel" onClick={togglePlay}>
                     {play?
                     <img alt={""} src={process.env.PUBLIC_URL + '/images/pause-button.png'} className={"pause-button"} />
@@ -262,9 +260,6 @@ function AudioVisualizer(props) {
                     <img alt={""} src={process.env.PUBLIC_URL + '/images/play-button.png'} className={"play-button"} />
                     }
                 </div>
-                :
-                <></>
-                }
                 <br />
                 <canvas ref={frequencyRef} id="frequency" onClick={togglePlay}/>
                 <canvas ref={backgroundRef} id="background" />
