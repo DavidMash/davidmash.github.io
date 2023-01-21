@@ -223,7 +223,7 @@ function AudioVisualizer(props) {
             audioElement.addEventListener("ended", () => {
                 setPlay(false);
             });
-            const audioCtx = 
+            console.log("!");
             setAudioCtx(new (window.AudioContext || window.webkitAudioContext)());
         }
     }, [audioElement]);
