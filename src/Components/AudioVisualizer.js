@@ -280,7 +280,11 @@ function AudioVisualizer(props) {
                 <br />
                 <canvas ref={frequencyRef} id="frequency" onClick={togglePlay}/>
                 <canvas ref={backgroundRef} id="background" />
-                <img alt={""} src={process.env.PUBLIC_URL + '/images/main_images/' + props.imageNumber + '.jpeg'} style={{objectFit: "cover", height: "100%", minWidth: "100%", width: "auto", position: "absolute", zIndex: "-3", top: "0px", left: "0px"}}/>
+                <img
+                    alt={""}
+                    src={process.env.PUBLIC_URL + '/images/main_images/' + props.imageNumber + '.jpeg'}
+                    style={{objectFit: "cover", minHeight: "100%", height: "100%", minWidth: "100%", width: "auto", position: "absolute", zIndex: "-3", top: "0px", left: "0px"}}
+                />
                 <div
                     className='bottom-controls'
                     onMouseOver={() => {if (!mouseOverBottom) setMouseOverBottom(true);}}
