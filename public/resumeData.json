@@ -114,16 +114,22 @@
         "description":"I led the software engineering at this music tech start up."
       },
       {
-        "title":"Paper on AI and Music",
-        "image":"copy-writing.png",
-        "link":"./resume/David Mash Writing Sample.pdf",
-        "description":"I wrote this paper arguing about machine learning's usage in the art of generative music."
+        "title":"Ed's Friends Ukraine",
+        "image":"logo.png",
+        "link":"https://edsfriends.org/",
+        "description":"I proudly volunteer as a frontend engineer for this amazing NGO that helps fund and deliver medical supplies and ambulances to Ukraine."
       },
       {
         "title":"Generative Music Album",
         "image":"music.png",
         "link":"https://soundcloud.com/david-mash-299129952/sets/engineered",
         "description":"After writing about machine learning and AI uses in music, I created my own generative music composing AI and used it to create this 12 track collection that I posted on my personal SoundCloud page."
+      },
+      {
+        "title":"Paper on AI and Music",
+        "image":"copy-writing.png",
+        "link":"./resume/David Mash Writing Sample.pdf",
+        "description":"I wrote this paper arguing about machine learning's usage in the art of generative music."
       }
     ]
   }
